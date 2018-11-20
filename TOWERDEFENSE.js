@@ -58,16 +58,14 @@ for (var i = 0; i < 10; i++) {
 }
 
 var KEY_SPATIAL = keyCode('X');
-
 var KEY_NEXT_WAVE = keyCode('Y');
+var KEY_MUTE = keyCode('M');
 
 function processDiagnostics() {
 
     if (eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
-
-    if (eatKey(KEY_NEXT_WAVE)) {
-        entityManager.sendNextWave();
-    }
+    if (eatKey(KEY_NEXT_WAVE)) entityManager.sendNextWave();
+    if (eatKey(KEY_MUTE)) g_soundOn = !g_soundOn;
 
     for (var i = 1; i <= 6; i++) {
         if (eatKey(KEY_NUMBER[i])) {
@@ -111,8 +109,13 @@ function renderSimulation(ctx) {
     if (g_gameState === MAIN_MENU) {
         menuManager.renderStartMenu(ctx);
     } else {
+        ctx.save();
+        if (g_isExplosion) {
+            ctx.translate(util.randRange(-2,2),util.randRange(-2,2));
+        }
         util.renderBackground(ctx);
         entityManager.render(ctx);
+        ctx.restore();
         menuManager.renderMenu(ctx);
         menuManager.renderclickedNewTower(ctx);
     }
@@ -154,6 +157,12 @@ function requestPreloads() {
         tower4: "images/tower4.png",
         tower5: "images/tower5.png",
         tower6: "images/tower6.png",
+        tower12: "images/tower12.png",
+        tower22: "images/tower22.png",
+        tower32: "images/tower32.png",
+        tower42: "images/tower42.png",
+        tower52: "images/tower52.png",
+        tower62: "images/tower62.png",
         bullet1: "images/tower1_bullet.png",
         explosion: "images/explosion.png"
     };
@@ -178,6 +187,36 @@ function preloadDone() {
         new Sprite(g_images.tower4),
         new Sprite(g_images.tower5),
         new Sprite(g_images.tower6),
+        new Sprite(g_images.tower1),
+        new Sprite(g_images.tower2),
+        new Sprite(g_images.tower3),
+        new Sprite(g_images.tower4),
+        new Sprite(g_images.tower5),
+        new Sprite(g_images.tower6),
+        new Sprite(g_images.tower1),
+        new Sprite(g_images.tower2),
+        new Sprite(g_images.tower3),
+        new Sprite(g_images.tower4),
+        new Sprite(g_images.tower5),
+        new Sprite(g_images.tower6),
+        new Sprite(g_images.tower12),
+        new Sprite(g_images.tower22),
+        new Sprite(g_images.tower32),
+        new Sprite(g_images.tower42),
+        new Sprite(g_images.tower52),
+        new Sprite(g_images.tower62),
+        new Sprite(g_images.tower12),
+        new Sprite(g_images.tower22),
+        new Sprite(g_images.tower32),
+        new Sprite(g_images.tower42),
+        new Sprite(g_images.tower52),
+        new Sprite(g_images.tower62),
+        new Sprite(g_images.tower12),
+        new Sprite(g_images.tower22),
+        new Sprite(g_images.tower32),
+        new Sprite(g_images.tower42),
+        new Sprite(g_images.tower52),
+        new Sprite(g_images.tower62),
     ];
     g_sprites.levels = [
         new Sprite(g_images.background1),
@@ -187,9 +226,12 @@ function preloadDone() {
     g_sprites.explosion = new Sprite(g_images.explosion, 9);
     g_sprites.bullet = new Sprite(g_images.bullet1);
     g_sprites.bullet.scale = 0.25;
-    g_sprites.towers.forEach(el => {
-        el.scale = 0.9;
-    })
+    for (var i=0; i<6; i++) {
+        g_sprites.towers[i].scale = 0.9;
+        g_sprites.towers[i+12].scale = 1.1;
+        g_sprites.towers[i+18].scale = 0.9;
+        g_sprites.towers[i+30].scale = 1.1;
+    }
 
     //entityManager.init();
     menuManager.init();

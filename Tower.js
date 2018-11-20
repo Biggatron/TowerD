@@ -27,6 +27,7 @@ function Tower(descr) {
     this.damage = this.damage;
     this.inRangeFrameTime = null;
     this.index = this.index;
+    this.lvl = 1;
 };
 
 Tower.prototype = new Entity();
@@ -63,7 +64,14 @@ Tower.prototype.update = function(du) {
 };
 
 Tower.prototype.upgrade = function() {
-    this.price += Math.round(this.price * 1.5 / 50) * 50;
+    this.lvl += 1;
+    if (this.lvl == 2) this.spriteIndex += 6;
+    if (this.lvl == 4) this.spriteIndex += 6;
+    if (this.lvl == 6) this.spriteIndex += 6;
+    if (this.lvl == 8) this.spriteIndex += 6;
+    if (this.lvl == 10) this.spriteIndex += 6;
+    this.sprite = g_sprites.towers[this.spriteIndex];
+    this.price = Math.round(this.price * 1.5 / 50) * 50;
     this.damage *= 2;
     this.fireRangeRadius *= 1.2;
     this.rateOfFire *= 0.8;
@@ -71,7 +79,7 @@ Tower.prototype.upgrade = function() {
 };
 
 Tower.prototype.sell = function() {
-    g_money += this.price * 0.75;
+    g_money += Math.floor(this.price*0.75 / 50) * 50;
     g_mapGrids[g_level][this.index] = 1;
     for (var i = 0; i < entityManager._towers.length; i++) {
         if (entityManager._towers[i] === this) {
@@ -93,13 +101,8 @@ Tower.prototype.getRadius = function() {
     return (this.sprite.width / 2);
 };
 
-// HACKED-IN AUDIO (no preloading)
-Tower.prototype.shootSound = new Audio(
-    "sounds/rockEvaporate.ogg");
-
 // Shoot in the direction the tower is pointing
 Tower.prototype.shoot = function(ID) {
-    this.shootSound.play();
     var dX = +Math.sin(this.rotation);
     var dY = -Math.cos(this.rotation);
     var launchDist = this.getRadius() * 1.2;

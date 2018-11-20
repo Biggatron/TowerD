@@ -141,6 +141,7 @@ var entityManager = {
                 cx: xGridNum * 40 + 20,
                 cy: yGridNum * 40 + 20,
                 sprite: menuManager._towerTypes[menuManager.clickedNewTower].sprite,
+                spriteIndex: menuManager._towerTypes[menuManager.clickedNewTower].spriteIndex,
                 shotVel: menuManager._towerTypes[menuManager.clickedNewTower].shotVel,
                 fireRangeRadius: menuManager._towerTypes[menuManager.clickedNewTower].fireRangeRadius,
                 rateOfFire: menuManager._towerTypes[menuManager.clickedNewTower].rateOfFire,
@@ -153,12 +154,14 @@ var entityManager = {
             g_money -= towerCost;
         }
         g_mapGrids[g_level][arrayIndex] = 0;
+        if (g_soundOn) menuManager.actionSound.play();
     },
-    createExplosion: function(cx, cy) {
+    createExplosion: function(cx, cy, damage) {
         this._bullets.push(new Explosion({
             cx,
             cy,
             sprite: g_sprites.explosion,
+            damage,
             numberOfFrames: 5
         }));
     },

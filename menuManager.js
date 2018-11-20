@@ -10,14 +10,17 @@ var menuManager = {
     // towerTypes stores each of the different towers as tower objects.
     // clickedNewTower knows if and then what tower on the menu we clicked last.
     _towerTypes: [],
+    _levels: [],
+    _action: [],
     clickedNewTower: null,
     clickedExistingTower: null,
     mouseOverMenuTower: null,
     mouseOverExistingTower: null,
 
+    selectSound: new Audio("sounds/select.ogg"),
+    actionSound: new Audio("sounds/action.ogg"),
+    sellSound: new Audio("sounds/sell.ogg"),
 
-    _levels: [],
-    _action: [],
 
     /**
      * Render the start menu
@@ -290,26 +293,27 @@ var menuManager = {
         ctx.globalAlpha = 0.8;
         ctx.textBaseline = "top";
         ctx.textAlign = "start";
-        util.renderText(ctx, "#3D2914", 18, "Price:", tower.cx + 5, tower.cy + yOffset + 70);
-        util.renderText(ctx, "#3D2914", 18, "Damage:", tower.cx + 5, tower.cy + yOffset + 90);
-        util.renderText(ctx, "#3D2914", 18, "Range:", tower.cx + 5, tower.cy + yOffset + 110);
-        util.renderText(ctx, "#3D2914", 18, "Fire rate:", tower.cx + 5, tower.cy + yOffset + 130);
+        if (this.mouseOverSellButton()) {
+            util.renderText(ctx, "#3D2914", 18, "Sell price:", tower.cx + 5, tower.cy + yOffset + 65);
+        } else {
+            util.renderText(ctx, "#3D2914", 18, "Upg. price:", tower.cx + 5, tower.cy + yOffset + 65);
+        }
+        util.renderText(ctx, "#3D2914", 18, "Tower lvl:", tower.cx + 5, tower.cy + yOffset + 85);
+        util.renderText(ctx, "#3D2914", 18, "Damage:", tower.cx + 5, tower.cy + yOffset + 105);
+        util.renderText(ctx, "#3D2914", 18, "Range:", tower.cx + 5, tower.cy + yOffset + 125);
+        util.renderText(ctx, "#3D2914", 18, "Fire rate:", tower.cx + 5, tower.cy + yOffset + 145);
 
         ctx.textAlign = "end";
-        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.price * 1.5 / 50) * 50, tower.cx + 165, tower.cy + yOffset + 70);
-        util.renderText(ctx, "#3D2914", 18, "" + tower.damage + " → " + tower.damage * 2, tower.cx + 165, tower.cy + yOffset + 90);
-        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.fireRangeRadius / 10) + " → " + Math.round(tower.fireRangeRadius * 1.2 / 10), tower.cx + 165, tower.cy + yOffset + 110);
-        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.rateOfFire / 100) / 10 + " → " + Math.round(tower.rateOfFire * 0.8 / 100) / 10, tower.cx + 165, tower.cy + yOffset + 130);
+        if (this.mouseOverSellButton()) {
+            util.renderText(ctx, "#3D2914", 18, "" + Math.floor(tower.price*0.75 / 50) * 50, tower.cx + 165, tower.cy + yOffset + 65);
+        } else {
+            util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.price * 1.5 / 50) * 50, tower.cx + 165, tower.cy + yOffset + 65);
+        }
+        util.renderText(ctx, "#3D2914", 18, "" + tower.lvl + " → " + (tower.lvl+1), tower.cx + 165, tower.cy + yOffset + 85);
+        util.renderText(ctx, "#3D2914", 18, "" + tower.damage + " → " + tower.damage * 2, tower.cx + 165, tower.cy + yOffset + 105);
+        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.fireRangeRadius / 10) + " → " + Math.round(tower.fireRangeRadius * 1.2 / 10), tower.cx + 165, tower.cy + yOffset + 125);
+        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.rateOfFire / 100) / 10 + " → " + Math.round(tower.rateOfFire * 0.8 / 100) / 10, tower.cx + 165, tower.cy + yOffset + 145);
         ctx.restore();
-    },
-
-    getUpgradedTower: function(tower) {
-        var upgTower = tower;
-        upgTower.price += 1.5 * tower.price;
-        upgTower.damage *= 2;
-        upgTower.fireRangeRadius *= 1.2;
-        upgTower.rateOfFire *= 0.8;
-        return upgTower;
     },
 
     // Renders the tower we have selected where the mouse is hovering.
@@ -371,32 +375,39 @@ var menuManager = {
     // MENU MOUSE OPS
     //===============
 
-    // Checks and selects the tower we clicked, is one was clicked.
+    // Finds the the item that's being clicked if any.
     findClickedItem: function(x, y) {
         if (this.mouseOverUpgradeButton()) {
             if (this.clickedExistingTower.price * 1.5 <= g_money) {
                 this.clickedExistingTower.upgrade();
                 this.clickedExistingTower = null;
             }
+            if (g_soundOn) this.actionSound.play();
             return;
         }
         if (this.mouseOverSellButton()) {
             console.log("inní sell í findClickedItem")
             this.clickedExistingTower.sell();
+            this.clickedExistingTower = null;
+            if (g_soundOn) this.sellSound.play();
             return;
         }
         if (this.isMouseOnNextWaveButton()) {
             entityManager.sendNextWave();
+            if (g_soundOn) this.actionSound.play();
+            return;
         }
         if (this.mouseOverMenuTower != null) {
             this.clickedNewTower = this.mouseOverMenuTower;
             // Don't select the tower if we can't afford it.
+            if (g_soundOn) this.selectSound.play();
             if (this._towerTypes[this.clickedNewTower].price > g_money) {
                 this.clickedNewTower = null;
             }
         }
         if (this.mouseOverExistingTower) {
             this.clickedExistingTower = this.mouseOverExistingTower;
+            if (g_soundOn) this.selectSound.play();
         }
     },
 
@@ -442,6 +453,7 @@ var menuManager = {
     generateTowerTypes: function() {
         this._towerTypes.push(new Tower({
             sprite: g_sprites.towers[0],
+            spriteIndex: 0,
             shotVel: 15,
             fireRangeRadius: 100,
             rateOfFire: 1000,
@@ -453,6 +465,7 @@ var menuManager = {
         // Turn sem skýtur bara flying óvini
         this._towerTypes.push(new Tower({
             sprite: g_sprites.towers[1],
+            spriteIndex: 1,
             shotVel: 15,
             fireRangeRadius: 200,
             rateOfFire: 1000,
@@ -463,17 +476,19 @@ var menuManager = {
         // Sprengjuturn
         this._towerTypes.push(new Tower({
             sprite: g_sprites.towers[2],
+            spriteIndex: 2,
             shotVel: 15,
             fireRangeRadius: 100,
             rateOfFire: 3000,
             price: 300,
-            damage: 1,
+            damage: 0.5,
             type: EXPLODE
         }));
 
         // Poison turn
         this._towerTypes.push(new Tower({
             sprite: g_sprites.towers[3],
+            spriteIndex: 3,
             shotVel: 15,
             fireRangeRadius: 100,
             rateOfFire: 2000,
@@ -485,6 +500,7 @@ var menuManager = {
         // Slow turn
         this._towerTypes.push(new Tower({
             sprite: g_sprites.towers[4],
+            spriteIndex: 4,
             shotVel: 15,
             fireRangeRadius: 100,
             rateOfFire: 1000,
@@ -496,6 +512,7 @@ var menuManager = {
         // Stun turn
         this._towerTypes.push(new Tower({
             sprite: g_sprites.towers[5],
+            spriteIndex: 5,
             shotVel: 15,
             fireRangeRadius: 100,
             rateOfFire: 1500,
