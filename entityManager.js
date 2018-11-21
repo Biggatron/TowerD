@@ -29,6 +29,7 @@ var entityManager = {
     _bullets: [],
     _enemies: [],
     _towers: [],
+    _animations: [],
 
     _CURRENT_WAVE: 1,
     _ENEMY_ID: 1,
@@ -36,14 +37,16 @@ var entityManager = {
     // "PRIVATE" METHODS
 
     _generateEnemies: function() {
-        var wave = waveManager.getNextWave(waves);
+        var wave = waveManager.getNextWave();
 
         for (var i = 0; i < wave.length; i++) {
             var {
                 type,
                 amount,
                 initialDelay,
-                flying
+                flying,
+                bounty,
+                hp
             } = wave[i];
             var index = -1;
             var {
@@ -55,12 +58,13 @@ var entityManager = {
                 this.generateEnemy({
                     ID: this._ENEMY_ID++,
                     type: type,
-                    hp: enemy.hp,
+                    hp: hp,
                     delay: (initialDelay + enemy.delay * j),
                     vel: enemy.vel,
                     sprite: g_sprites.enemies[index],
                     numberOfFrames: 4,
-                    flying: flying
+                    flying: flying,
+                    bounty: bounty,
                 });
             }
         }
@@ -77,7 +81,7 @@ var entityManager = {
     // i.e. thing which need `this` to be defined.
     //
     deferredSetup: function() {
-        this._categories = [this._bullets, this._enemies, this._towers];
+        this._categories = [this._bullets, this._enemies, this._towers, this._animations];
     },
 
     init: function() {
@@ -157,12 +161,34 @@ var entityManager = {
         if (g_soundOn) menuManager.actionSound.play();
     },
     createExplosion: function(cx, cy, damage) {
-        this._bullets.push(new Explosion({
+        this._animations.push(new Explosion({
             cx,
             cy,
             sprite: g_sprites.explosion,
             damage,
-            numberOfFrames: 5
+            numberOfFrames: 9
+        }));
+    },
+    createPoison: function(entity) {
+        this._animations.push(new Poison({
+            entity,
+            sprite: g_sprites.poison,
+        }));
+    },
+    createStun: function(cx, cy, damage) {
+        this._animations.push(new Stun({
+            cx,
+            cy,
+            sprite: g_sprites.stun,
+            damage,
+        }));
+    },
+    createDeath: function(cx, cy){
+        this._animations.push(new Death({
+            cx,
+            cy,
+            sprite: g_sprites.death,
+            numberOfFrames: 7
         }));
     },
     getEnemiesByDist: function() {
