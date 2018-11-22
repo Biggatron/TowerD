@@ -109,16 +109,18 @@ var entityManager = {
         this.deferredSetup();
     },
 
-    fireBullet: function(cx, cy, velX, velY, rotation, damage, type, targetID) {
+    fireBullet: function(cx, cy, velX, velY, xLength, yLength, rotation, damage, type, target) {
         this._bullets.push(new Bullet({
             cx: cx,
             cy: cy,
             velX: velX,
             velY: velY,
-            targetID: targetID,
+            xLength: xLength,
+            yLength: yLength,
             rotation: rotation,
             damage: damage,
-            type: type
+            type: type,
+            target: target
         }));
     },
 
@@ -210,7 +212,7 @@ var entityManager = {
           this._generateEnemies();
         }
         */
-
+        du *= g_speed;
         for (var c = 0; c < this._categories.length; ++c) {
 
             var aCategory = this._categories[c];
@@ -222,7 +224,7 @@ var entityManager = {
                 if (aCategory[i].delay <= 0 || aCategory[i].delay === undefined) {
                     status = aCategory[i].update(du);
                 } else {
-                    aCategory[i].delay = aCategory[i].delay - 1;
+                    aCategory[i].delay = aCategory[i].delay - du;
                     status = null; // Núllstilla status svo óvinum sem eiga eftir að spawna verði ekki eytt
                 }
 

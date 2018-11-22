@@ -56,16 +56,23 @@ var KEY_NUMBER = [];
 for (var i = 0; i < 10; i++) {
     KEY_NUMBER[i] = keyCode(i.toString());
 }
-
+var KEY_RIGHT_ARROW = keyCode('L');
 var KEY_SPATIAL = keyCode('X');
 var KEY_NEXT_WAVE = keyCode('Y');
 var KEY_MUTE = keyCode('M');
+var KEY_TOGGLE_NW_INFO = keyCode('N');
 
 function processDiagnostics() {
 
     if (eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
     if (eatKey(KEY_NEXT_WAVE)) entityManager.sendNextWave();
     if (eatKey(KEY_MUTE)) g_soundOn = !g_soundOn;
+    if (eatKey(KEY_TOGGLE_NW_INFO)) g_renderNextToggle = !g_renderNextToggle;
+
+    if (keys[KEY_RIGHT_ARROW]) {
+        g_speed = 2;
+    }
+    else g_speed = 1;
 
     for (var i = 1; i <= 6; i++) {
         if (eatKey(KEY_NUMBER[i])) {
