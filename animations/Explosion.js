@@ -15,7 +15,7 @@ function Explosion(descr) {
     this.ticksPerFrame = 6,
     this.numberOfFrames = 9;
     this.radius = 50;
-    this.damage *= 0.3;
+    this.damage *= 0.5;
 
     this.explode();
 }

@@ -274,8 +274,10 @@ var menuManager = {
         util.renderText(ctx, "#3D2914", 18, "Fire rate:", g_gameWidth + 35, 430);
 
         ctx.textAlign = "end";
-        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.price / 50) * 50, g_gameWidth + 165, 370);
-        util.renderText(ctx, "#3D2914", 18, "" + tower.damage, g_gameWidth + 165, 390);
+        console.log(this._towerTypes[0]);
+        console.log(tower);
+        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.price / 10) * 10, g_gameWidth + 165, 370);
+        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.damage*10) /10, g_gameWidth + 165, 390);
         util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.fireRangeRadius / 10), g_gameWidth + 165, 410);
         util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.rateOfFire / 100) / 10, g_gameWidth + 165, 430);
         ctx.restore();
@@ -329,7 +331,7 @@ var menuManager = {
             util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.price * 2.5 / 50) * 50, tower.cx + 165, tower.cy + yOffset + 65);
         }
         util.renderText(ctx, "#3D2914", 18, "" + tower.lvl + " → " + (tower.lvl+1), tower.cx + 165, tower.cy + yOffset + 85);
-        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.damage*10)/10 + " → " + Math.round(tower.damage * 1.5 *10)/10, tower.cx + 165, tower.cy + yOffset + 105);
+        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.damage*10)/10 + " → " + Math.round(tower.damage * 2 *10)/10, tower.cx + 165, tower.cy + yOffset + 105);
         util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.fireRangeRadius / 10) + " → " + Math.round(tower.fireRangeRadius * 1.1 / 10), tower.cx + 165, tower.cy + yOffset + 125);
         util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.rateOfFire / 100) / 10 + " → " + Math.round(tower.rateOfFire * 0.9 / 100) / 10, tower.cx + 165, tower.cy + yOffset + 145);
         ctx.restore();
@@ -514,9 +516,9 @@ var menuManager = {
             spriteIndex: 3,
             shotVel: 15,
             fireRangeRadius: 100,
-            rateOfFire: 2000,
-            price: 150,
-            damage: 0.1,
+            rateOfFire: 1500,
+            price: 120,
+            damage: 2,
             type: POISON
         }));
 

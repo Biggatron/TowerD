@@ -37,39 +37,41 @@ var g_waves = [
     ]
 ];
 
+var _multip = 1.4;
 for (var i=2; i<=50; i++) {
+    _multip *= 1.4;
     g_waves.push(
         [
-            {type: ROBOTMAN, amount: 10, initialDelay: 0, bounty: 10*i, hp: 2*i},
-            {type: MOOSE, amount: 10, initialDelay: 275, bounty: 20*i, hp: 6*i},
-            {type: DOG, amount: 10, initialDelay: 500, bounty: 20*i, hp: 3*i}
+            {type: ROBOTMAN, amount: 10, initialDelay: 0, bounty: 10*i*_multip, hp: 2*i},
+            {type: MOOSE, amount: 10, initialDelay: 275, bounty: 20*i*_multip, hp: 6*i},
+            {type: DOG, amount: 10, initialDelay: 500, bounty: 20*i*_multip, hp: 3*i}
         ],
         [
-            {type: KID, amount: 10, initialDelay: 0, bounty: 30*i, hp: 10*i},
-            {type: ROBOTMAN, amount: 10, initialDelay: 25, bounty: 10*i, hp: 2*i}
+            {type: KID, amount: 10, initialDelay: 0, bounty: 30*i, hp: 10*i*_multip},
+            {type: ROBOTMAN, amount: 10, initialDelay: 25, bounty: 10*i, hp: 2*i*_multip}
         ],
         [
-            {type: BIRD, amount: 15, initialDelay: 0, flying: true, bounty: 20*i, hp: 6*i},
-            {type: DOG, amount: 15, initialDelay: 25, bounty: 20*i, hp: 3*i}
+            {type: BIRD, amount: 15, initialDelay: 0, flying: true, bounty: 20*i, hp: 6*i*_multip},
+            {type: DOG, amount: 15, initialDelay: 25, bounty: 20*i, hp: 3*i*_multip}
         ],
         [
-            {type: MOOSE, amount: 10, initialDelay: 0, bounty: 20*i, hp: 6*i},
-            {type: ROBOTMAN, amount: 10, initialDelay: 250, bounty: 10*i, hp: 2*i},
-            {type: KID, amount: 5, initialDelay: 275, bounty: 30*i, hp: 10*i},
-            {type: DOG, amount: 10, initialDelay: 500, bounty: 20*i, hp: 3*i}
+            {type: MOOSE, amount: 10, initialDelay: 0, bounty: 20*i, hp: 6*i*_multip},
+            {type: ROBOTMAN, amount: 10, initialDelay: 250, bounty: 10*i, hp: 2*i*_multip},
+            {type: KID, amount: 5, initialDelay: 275, bounty: 30*i, hp: 10*i*_multip},
+            {type: DOG, amount: 10, initialDelay: 500, bounty: 20*i, hp: 3*i*_multip}
         ],
         [
-            {type: ROBOTMAN, amount: 20, initialDelay: 0, bounty: 10*i, hp: 2*i},
-            {type: MOOSE, amount: 20, initialDelay: 500, bounty: 20*i, hp: 6*i},
-            {type: DOG, amount: 20, initialDelay: 1000, bounty: 20*i, hp: 3*i},
-            {type: KID, amount: 20, initialDelay: 1500, bounty: 30*i, hp: 10*i}
+            {type: ROBOTMAN, amount: 20, initialDelay: 0, bounty: 10*i, hp: 2*i*_multip},
+            {type: MOOSE, amount: 20, initialDelay: 500, bounty: 20*i, hp: 6*i*_multip},
+            {type: DOG, amount: 20, initialDelay: 1000, bounty: 20*i, hp: 3*i*_multip},
+            {type: KID, amount: 20, initialDelay: 1500, bounty: 30*i, hp: 10*i*_multip}
         ],
         [
-            {type: ROBOTMAN, amount: 3, initialDelay: 25, bounty: 10*5*i, hp: 2*10*i},
-            {type: MOOSE, amount: 3, initialDelay: 500, bounty: 20*5*i, hp: 6*10*i},
-            {type: DOG, amount: 3, initialDelay: 1000, bounty: 20*5*i, hp: 3*10*i},
-            {type: BIRD, amount: 3, initialDelay: 1200, flying: true, bounty: 20*5*i, hp: 6*10*i},
-            {type: KID, amount: 3, initialDelay: 1500, bounty: 30*5*i, hp: 10*10*i}
+            {type: ROBOTMAN, amount: 3, initialDelay: 25, bounty: 10*5*i, hp: 2*10*i*_multip},
+            {type: MOOSE, amount: 3, initialDelay: 500, bounty: 20*5*i, hp: 6*10*i*_multip},
+            {type: DOG, amount: 3, initialDelay: 1000, bounty: 20*5*i, hp: 3*10*i*_multip},
+            {type: BIRD, amount: 3, initialDelay: 1200, flying: true, bounty: 20*5*i, hp: 6*10*i*_multip},
+            {type: KID, amount: 3, initialDelay: 1500, bounty: 30*5*i, hp: 10*10*i*_multip}
         ]
     );
 };
