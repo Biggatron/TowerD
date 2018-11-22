@@ -51,7 +51,6 @@ Tower.prototype.update = function(du) {
         // we check whether enough time has passed between shots.
         if (this.inRangeTime == null) {
             this.inRangeTime = 0;
-            console.log("inrangeTime" + this.inRangeTime);
             this.shoot(entityInRange);
         } else if (this.shouldShoot(du)) {
             this.shoot(entityInRange);

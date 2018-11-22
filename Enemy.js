@@ -35,7 +35,7 @@ function Enemy(descr) {
     this.slowTimer = 0;
     this.stunTimer = 0;
     this.grunt = this.grunt || new Audio("sounds/maleGrunt.ogg");
-    if (this.type == KID) this.grunt = new Audio("sounds/femaleGrunt.ogg");
+    if (this.type == SUPERMAN) this.grunt = new Audio("sounds/femaleGrunt.ogg");
     if (this.type == BIRD) this.grunt = new Audio("sounds/birdGrunt.ogg");
     this.grunt.volume = 0.5;
 
@@ -71,7 +71,13 @@ Enemy.prototype.update = function(du) {
         }
     }
 
-    if (this._isDeadNow) return entityManager.KILL_ME_NOW;
+    if (this._isDeadNow) {
+        if (entityManager.enemies.length == 1) {
+            g_money += (waveManager.nextWaveID-1) * 50;
+            if (g_soundOn) menuManager.sellSound.play();
+        }
+        return entityManager.KILL_ME_NOW;
+    }
 
     this.checkStatus(du); // Uppfærir slow/stun/poison
 
@@ -89,10 +95,10 @@ Enemy.prototype.update = function(du) {
 
     // Athugar hvar næsti punktur er og færir enemy í átt að honum.
     // Ef enemy er á næsta punkt þá breytum við næsta punkt.
-    if (Math.abs(pathNode.cx - this.cx) < this.vel) this.cx = pathNode.cx;
-    if (Math.abs(pathNode.cy - this.cy) < this.vel) this.cy = pathNode.cy;
-
     let velocity = this.vel * du;
+
+    if (Math.abs(pathNode.cx - this.cx) < velocity) this.cx = pathNode.cx;
+    if (Math.abs(pathNode.cy - this.cy) < velocity) this.cy = pathNode.cy;
 
     if (pathNode.cx > this.cx) {
         this.cx += velocity ;
@@ -188,6 +194,7 @@ Enemy.prototype.checkStatus = function(du) {
         this.hp -= this.poisonDamage;
         this.poisonTimer -= du;
         if (this.hp <= 0) {
+          console.log("Deyr í potion");
           this.die();
         }
     }
