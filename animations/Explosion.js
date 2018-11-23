@@ -29,7 +29,6 @@ Explosion.prototype.update = function(du) {
         g_isExplosion = false;
     }
     this.tickCount += 1;
-    console.log(this.damage);
 
     if (this.tickCount > this.ticksPerFrame) {
         this.tickCount = 0;

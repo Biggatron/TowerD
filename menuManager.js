@@ -2,16 +2,23 @@
 // MENU MANAGER
 // ============
 
+"use strict";
 
-"use strict"
+/* jshint browser: true, devel: true, globalstrict: true */
+
+/*
+0        1         2         3         4         5         6         7         8
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+*/
+
 
 var menuManager = {
 
     // towerTypes stores each of the different towers as tower objects.
     // clickedNewTower knows if and then what tower on the menu we clicked last.
-    _towerTypes: [],
     _levels: [],
     _action: [],
+    towerTypes: [],
     clickedNewTower: null,
     clickedExistingTower: null,
     mouseOverMenuTower: null,
@@ -22,85 +29,12 @@ var menuManager = {
     sellSound: new Audio("sounds/sell.ogg"),
 
 
-    /**
-     * Render the start menu
-     * Where a user selects a level to play
-     * @param {context} ctx
-     */
-    renderStartMenu: function(ctx) {
-        util.clearCanvas(ctx);
-        ctx.textAlign = "center";
-        util.renderText(ctx, "yellow", 55, "TOWER DEFENSE", g_canvas.width / 2, 100);
-        util.renderText(ctx, "yellow", 35, "Select a map to play", g_canvas.width / 2, 150);
-
-        ctx.drawImage(g_images.background1, 180, 250, 200, 150);
-        ctx.drawImage(g_images.background2, 400, 250, 200, 150);
-        ctx.drawImage(g_images.background3, 620, 250, 200, 150);
-
-        if (g_dificultyMultiplier==1.2) util.fillBox(ctx, g_canvas.width/2-173,
-                                                    447, 106, 46, "white");
-        if (g_dificultyMultiplier==1.3) util.fillBox(ctx, g_canvas.width/2-53,
-                                                    447, 106, 46, "white");
-        if (g_dificultyMultiplier==1.4) util.fillBox(ctx, g_canvas.width/2+67,
-                                                    447, 106, 46, "white");
-
-        ctx.fillStyle = "yellow";
-        ctx.fillRect(g_canvas.width/2-170, 450, 100, 40);
-        ctx.fillRect(g_canvas.width/2-50, 450, 100, 40);
-        ctx.fillRect(g_canvas.width/2+70, 450, 100, 40);
-
-        util.renderText(ctx, "black", 20, "EASY", g_canvas.width/2-120, 477);
-        util.renderText(ctx, "black", 20, "NORMAL", g_canvas.width/2, 477);
-        util.renderText(ctx, "black", 20, "HARD", g_canvas.width/2+120, 477);
-
-
-        /*
-        Afhverju virkar þetta ekki??!??!?!???!?!?
-        ctx.lineWidth="3";
-        ctx.strokeStyle="white";
-        if (g_dificultyMultiplier==1.2) ctx.rect(g_canvas.width/2-172, 448, 104, 44);
-        if (g_dificultyMultiplier==1.3) ctx.rect(g_canvas.width/2-52, 448, 104, 44);
-        if (g_dificultyMultiplier==1.4) ctx.rect(g_canvas.width/2+68, 448, 104, 44);
-        */
-
-        ctx.stroke();
-    },
-
-    /**
-     * Renders an overlay over the game,
-     * when paused and when game is over
-     * @param {context} ctx
-     * @param {string} message
-     */
-    renderPausedOrGameOver: function(ctx, message) {
-        var prevfillStyle = ctx.fillStyle;
-        var oldAlpha = ctx.globalAlpha;
-        ctx.fillStyle = "white";
-        ctx.globalAlpha = 0.7;
-        ctx.fillRect(0, 0, g_canvas.width, g_canvas.height);
-        ctx.globalAlpha = oldAlpha;
-
-        ctx.font = "40px Arial";
-        ctx.fillStyle = "black";
-        ctx.fillText(message, g_gameWidth / 2 - 150, g_gameHeight / 2);
-
-        util.fillBox(ctx, g_gameWidth / 2 - 100, g_gameHeight / 2 + 100, 200, 50, "#A00");
-        util.fillBox(ctx, g_gameWidth / 2 - 95, g_gameHeight / 2 + 105, 190, 40, "red");
-
-        ctx.font = "30px Arial";
-        ctx.fillStyle = "white";
-        ctx.fillText("NEW GAME", g_gameWidth / 2 - 80, g_gameHeight / 2 + 135);
-
-        ctx.fillStyle = prevfillStyle;
-
-    },
-
     setupDificulty: function(xPos, yPos) {
-        if (yPos>450 && yPos<490) {
-            if (xPos>330 && xPos<430) g_dificultyMultiplier = 1.2;
-            if (xPos>450 && xPos<550) g_dificultyMultiplier = 1.3;
-            if (xPos>580 && xPos<670) g_dificultyMultiplier = 1.4;
-            }
+        if (yPos > 450 && yPos < 490) {
+            if (xPos > 330 && xPos < 430) g_dificultyMultiplier = 1.2;
+            if (xPos > 450 && xPos < 550) g_dificultyMultiplier = 1.3;
+            if (xPos > 580 && xPos < 670) g_dificultyMultiplier = 1.4;
+        }
     },
 
     /**
@@ -174,7 +108,69 @@ var menuManager = {
     // MENU RENDER OPS
     // ===============
 
-    // draws the menu
+
+    /**
+     * Render the start menu
+     * Where a user selects a level to play
+     * @param {context} ctx
+     */
+    renderStartMenu: function(ctx) {
+        util.clearCanvas(ctx);
+        ctx.textAlign = "center";
+        util.renderText(ctx, "yellow", 55, "TOWER DEFENSE", g_canvas.width / 2, 100);
+        util.renderText(ctx, "yellow", 35, "Select a map to play", g_canvas.width / 2, 150);
+
+        ctx.drawImage(g_images.background1, 180, 250, 200, 150);
+        ctx.drawImage(g_images.background2, 400, 250, 200, 150);
+        ctx.drawImage(g_images.background3, 620, 250, 200, 150);
+
+        if (g_dificultyMultiplier == 1.2) util.fillBox(ctx, g_canvas.width / 2 - 173,
+            447, 106, 46, "white");
+        if (g_dificultyMultiplier == 1.3) util.fillBox(ctx, g_canvas.width / 2 - 53,
+            447, 106, 46, "white");
+        if (g_dificultyMultiplier == 1.4) util.fillBox(ctx, g_canvas.width / 2 + 67,
+            447, 106, 46, "white");
+
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(g_canvas.width / 2 - 170, 450, 100, 40);
+        ctx.fillRect(g_canvas.width / 2 - 50, 450, 100, 40);
+        ctx.fillRect(g_canvas.width / 2 + 70, 450, 100, 40);
+
+        util.renderText(ctx, "black", 20, "EASY", g_canvas.width / 2 - 120, 477);
+        util.renderText(ctx, "black", 20, "NORMAL", g_canvas.width / 2, 477);
+        util.renderText(ctx, "black", 20, "HARD", g_canvas.width / 2 + 120, 477);
+    },
+
+    /**
+     * Renders an overlay over the game,
+     * when paused and when game is over
+     * @param {context} ctx
+     * @param {string} message
+     */
+    renderGameOverlay: function(ctx, message) {
+        var prevfillStyle = ctx.fillStyle;
+        var oldAlpha = ctx.globalAlpha;
+        ctx.fillStyle = "white";
+        ctx.globalAlpha = 0.7;
+        ctx.fillRect(0, 0, g_canvas.width, g_canvas.height);
+        ctx.globalAlpha = oldAlpha;
+
+        ctx.font = "40px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText(message, g_gameWidth / 2 - 150, g_gameHeight / 2);
+
+        util.fillBox(ctx, g_gameWidth / 2 - 100, g_gameHeight / 2 + 100, 200, 50, "#A00");
+        util.fillBox(ctx, g_gameWidth / 2 - 95, g_gameHeight / 2 + 105, 190, 40, "red");
+
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText("NEW GAME", g_gameWidth / 2 - 80, g_gameHeight / 2 + 135);
+
+        ctx.fillStyle = prevfillStyle;
+    },
+
+
+    // Renders the in-game menu
     renderMenu: function(ctx) {
         ctx.drawImage(g_images.menu, 0, 0, g_canvas.width, g_canvas.height);
         this.renderTowerIcons(ctx);
@@ -188,38 +184,38 @@ var menuManager = {
         this.renderTowerUpgradeInfo(ctx);
     },
 
-    // draws the tower icons on the menu. If player can not afford the tower
+    // Render the tower icons on the menu. If player can not afford the tower
     // then it will be drawn with a low opacity.
     renderTowerIcons: function(ctx) {
-        if (g_money >= this._towerTypes[0].price) {
-            this._towerTypes[0].sprite.drawCentredAt(ctx, 862, 100, 0, 1);
+        if (g_money >= this.towerTypes[0].price) {
+            this.towerTypes[0].sprite.drawCentredAt(ctx, 862, 100, 0, 1);
         } else {
-            this._towerTypes[0].sprite.drawCentredAt(ctx, 862, 100, 0, 0.3);
+            this.towerTypes[0].sprite.drawCentredAt(ctx, 862, 100, 0, 0.3);
         }
-        if (g_money >= this._towerTypes[1].price) {
-            this._towerTypes[1].sprite.drawCentredAt(ctx, 938, 100, 0, 1);
+        if (g_money >= this.towerTypes[1].price) {
+            this.towerTypes[1].sprite.drawCentredAt(ctx, 938, 100, 0, 1);
         } else {
-            this._towerTypes[1].sprite.drawCentredAt(ctx, 938, 100, 0, 0.3);
+            this.towerTypes[1].sprite.drawCentredAt(ctx, 938, 100, 0, 0.3);
         }
-        if (g_money >= this._towerTypes[2].price) {
-            this._towerTypes[2].sprite.drawCentredAt(ctx, 862, 176, 0, 1);
+        if (g_money >= this.towerTypes[2].price) {
+            this.towerTypes[2].sprite.drawCentredAt(ctx, 862, 176, 0, 1);
         } else {
-            this._towerTypes[2].sprite.drawCentredAt(ctx, 862, 176, 0, 0.3);
+            this.towerTypes[2].sprite.drawCentredAt(ctx, 862, 176, 0, 0.3);
         }
-        if (g_money >= this._towerTypes[3].price) {
-            this._towerTypes[3].sprite.drawCentredAt(ctx, 938, 176, 0, 1);
+        if (g_money >= this.towerTypes[3].price) {
+            this.towerTypes[3].sprite.drawCentredAt(ctx, 938, 176, 0, 1);
         } else {
-            this._towerTypes[3].sprite.drawCentredAt(ctx, 938, 176, 0, 0.3);
+            this.towerTypes[3].sprite.drawCentredAt(ctx, 938, 176, 0, 0.3);
         }
-        if (g_money >= this._towerTypes[4].price) {
-            this._towerTypes[4].sprite.drawCentredAt(ctx, 862, 252, 0, 1);
+        if (g_money >= this.towerTypes[4].price) {
+            this.towerTypes[4].sprite.drawCentredAt(ctx, 862, 252, 0, 1);
         } else {
-            this._towerTypes[4].sprite.drawCentredAt(ctx, 862, 252, 0, 0.3);
+            this.towerTypes[4].sprite.drawCentredAt(ctx, 862, 252, 0, 0.3);
         }
-        if (g_money >= this._towerTypes[5].price) {
-            this._towerTypes[5].sprite.drawCentredAt(ctx, 938, 252, 0, 1);
+        if (g_money >= this.towerTypes[5].price) {
+            this.towerTypes[5].sprite.drawCentredAt(ctx, 938, 252, 0, 1);
         } else {
-            this._towerTypes[5].sprite.drawCentredAt(ctx, 938, 252, 0, 0.3);
+            this.towerTypes[5].sprite.drawCentredAt(ctx, 938, 252, 0, 0.3);
         }
     },
 
@@ -234,45 +230,6 @@ var menuManager = {
         ctx.restore();
     },
 
-    mouseOverUpgradeInfo: function() {
-        if (!this.clickedExistingTower) return;
-        var cx = this.clickedExistingTower.cx;
-        var cy = this.clickedExistingTower.cy;
-        var yOffset = 20;
-        if (cy > 400) yOffset = -200;
-        if (g_mouseY > cy + yOffset && g_mouseY < cy + yOffset + 180) {
-            if (g_mouseX > cx - 15 && g_mouseX < cx + 185) {
-                return true;
-            }
-        }
-    },
-
-    mouseOverUpgradeButton: function() {
-        if (!this.clickedExistingTower) return;
-        var cx = this.clickedExistingTower.cx;
-        var cy = this.clickedExistingTower.cy;
-        var yOffset = 25;
-        if (cy > 400) yOffset = -200;
-        if (g_mouseY > cy + yOffset + 20 && g_mouseY < cy + yOffset + 60) {
-            if (g_mouseX > cx + 5 && g_mouseX < cx + 105) {
-                return true;
-            }
-        }
-    },
-
-    mouseOverSellButton: function() {
-        if (!this.clickedExistingTower) return;
-        var cx = this.clickedExistingTower.cx;
-        var cy = this.clickedExistingTower.cy;
-        var yOffset = 25;
-        if (cy > 400) yOffset = -200;
-        if (g_mouseY > cy + yOffset + 20 && g_mouseY < cy + yOffset + 60) {
-            if (g_mouseX > cx + 110 && g_mouseX < cx + 165) {
-                return true;
-            }
-        }
-    },
-
     renderNextWaveInfo: function(ctx) {
         if (!this.isMouseOnNextWaveButton()) return;
         ctx.save();
@@ -281,19 +238,19 @@ var menuManager = {
         ctx.textAlign = "center";
         util.renderText(ctx, "#3D2914", 20, "Next wave", g_gameWidth + 100, 315);
 
-        var wave = g_waves[waveManager.nextWaveID-1];
-        for (i=0; i<wave.length; i++) {
-          ctx.textAlign = "start";
-          util.renderText(ctx, "#3D2914", 16, "" + wave[i].type, g_gameWidth + 35, 340+i*20);
-          ctx.textAlign = "end";
-          util.renderText(ctx, "#3D2914", 18, "x" + wave[i].amount, g_gameWidth + 165, 340+i*20);
+        var wave = g_waves[waveManager.nextWaveID - 1];
+        for (i = 0; i < wave.length; i++) {
+            ctx.textAlign = "start";
+            util.renderText(ctx, "#3D2914", 16, "" + wave[i].type, g_gameWidth + 35, 340 + i * 20);
+            ctx.textAlign = "end";
+            util.renderText(ctx, "#3D2914", 18, "x" + wave[i].amount, g_gameWidth + 165, 340 + i * 20);
         };
 
         ctx.restore();
     },
 
     renderTowerInfo: function(ctx) {
-        var tower = this._towerTypes[this.mouseOverMenuTower]
+        var tower = this.towerTypes[this.mouseOverMenuTower]
         if (!tower) {
             tower = this.mouseOverExistingTower;
         }
@@ -313,7 +270,7 @@ var menuManager = {
 
         ctx.textAlign = "end";
         util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.price / 10) * 10, g_gameWidth + 165, 370);
-        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.damage*10) /10, g_gameWidth + 165, 390);
+        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.damage * 10) / 10, g_gameWidth + 165, 390);
         util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.fireRangeRadius / 10), g_gameWidth + 165, 410);
         util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.rateOfFire / 100) / 10, g_gameWidth + 165, 430);
         ctx.restore();
@@ -362,12 +319,12 @@ var menuManager = {
 
         ctx.textAlign = "end";
         if (this.mouseOverSellButton()) {
-            util.renderText(ctx, "#3D2914", 18, "" + Math.floor(tower.price*0.75 / 50) * 50, tower.cx + 165, tower.cy + yOffset + 65);
+            util.renderText(ctx, "#3D2914", 18, "" + Math.floor(tower.price * 0.75 / 50) * 50, tower.cx + 165, tower.cy + yOffset + 65);
         } else {
             util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.price * 2.5 / 50) * 50, tower.cx + 165, tower.cy + yOffset + 65);
         }
-        util.renderText(ctx, "#3D2914", 18, "" + tower.lvl + " → " + (tower.lvl+1), tower.cx + 165, tower.cy + yOffset + 85);
-        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.damage*10)/10 + " → " + Math.round(tower.damage * 2 *10)/10, tower.cx + 165, tower.cy + yOffset + 105);
+        util.renderText(ctx, "#3D2914", 18, "" + tower.lvl + " → " + (tower.lvl + 1), tower.cx + 165, tower.cy + yOffset + 85);
+        util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.damage * 10) / 10 + " → " + Math.round(tower.damage * 2 * 10) / 10, tower.cx + 165, tower.cy + yOffset + 105);
         util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.fireRangeRadius / 10) + " → " + Math.round(tower.fireRangeRadius * 1.1 / 10), tower.cx + 165, tower.cy + yOffset + 125);
         util.renderText(ctx, "#3D2914", 18, "" + Math.round(tower.rateOfFire / 100) / 10 + " → " + Math.round(tower.rateOfFire * 0.9 / 100) / 10, tower.cx + 165, tower.cy + yOffset + 145);
         ctx.restore();
@@ -389,10 +346,10 @@ var menuManager = {
                     ctx,
                     g_mouseX,
                     g_mouseY,
-                    this._towerTypes[this.clickedNewTower].fireRangeRadius,
+                    this.towerTypes[this.clickedNewTower].fireRangeRadius,
                     0.25);
             }
-            this._towerTypes[this.clickedNewTower].sprite.drawCentredAt(
+            this.towerTypes[this.clickedNewTower].sprite.drawCentredAt(
                 ctx, g_mouseX, g_mouseY, 0, 0.3);
         }
         ctx.restore();
@@ -420,7 +377,7 @@ var menuManager = {
         ctx.restore();
     },
 
-    renderFastForward: function (ctx) {
+    renderFastForward: function(ctx) {
         ctx.save();
         var text = "Speed: x" + g_speed;
         ctx.textAlign = "center";
@@ -468,7 +425,7 @@ var menuManager = {
             this.clickedNewTower = this.mouseOverMenuTower;
             // Don't select the tower if we can't afford it.
             if (g_soundOn) this.selectSound.play();
-            if (this._towerTypes[this.clickedNewTower].price > g_money) {
+            if (this.towerTypes[this.clickedNewTower].price > g_money) {
                 this.clickedNewTower = null;
             }
         }
@@ -497,7 +454,7 @@ var menuManager = {
             }
         }
         if (this.mouseOverMenuTower != null) return;
-        entityManager._towers.forEach(el => {
+        entityManager.getTowers().forEach(el => {
             if (Math.abs(g_mouseX - el.cx) < 20 &&
                 Math.abs(g_mouseY - el.cy) < 20) {
                 this.mouseOverExistingTower = el;
@@ -512,13 +469,52 @@ var menuManager = {
         return bool;
     },
 
+    mouseOverUpgradeInfo: function() {
+        if (!this.clickedExistingTower) return;
+        var cx = this.clickedExistingTower.cx;
+        var cy = this.clickedExistingTower.cy;
+        var yOffset = 20;
+        if (cy > 400) yOffset = -200;
+        if (g_mouseY > cy + yOffset && g_mouseY < cy + yOffset + 180) {
+            if (g_mouseX > cx - 15 && g_mouseX < cx + 185) {
+                return true;
+            }
+        }
+    },
+
+    mouseOverUpgradeButton: function() {
+        if (!this.clickedExistingTower) return;
+        var cx = this.clickedExistingTower.cx;
+        var cy = this.clickedExistingTower.cy;
+        var yOffset = 25;
+        if (cy > 400) yOffset = -200;
+        if (g_mouseY > cy + yOffset + 20 && g_mouseY < cy + yOffset + 60) {
+            if (g_mouseX > cx + 5 && g_mouseX < cx + 105) {
+                return true;
+            }
+        }
+    },
+
+    mouseOverSellButton: function() {
+        if (!this.clickedExistingTower) return;
+        var cx = this.clickedExistingTower.cx;
+        var cy = this.clickedExistingTower.cy;
+        var yOffset = 25;
+        if (cy > 400) yOffset = -200;
+        if (g_mouseY > cy + yOffset + 20 && g_mouseY < cy + yOffset + 60) {
+            if (g_mouseX > cx + 110 && g_mouseX < cx + 165) {
+                return true;
+            }
+        }
+    },
+
     //===============
     // MENU SETUP OPS
     //===============
 
     // This function initialises our tower types.
     generateTowerTypes: function() {
-        this._towerTypes.push(new Tower({
+        this.towerTypes.push(new Tower({
             sprite: g_sprites.towers[0],
             spriteIndex: 0,
             shotVel: 15,
@@ -530,7 +526,7 @@ var menuManager = {
         }));
 
         // Turn sem skýtur bara flying óvini
-        this._towerTypes.push(new Tower({
+        this.towerTypes.push(new Tower({
             sprite: g_sprites.towers[1],
             spriteIndex: 1,
             shotVel: 15,
@@ -542,7 +538,7 @@ var menuManager = {
         }));
 
         // Sprengjuturn
-        this._towerTypes.push(new Tower({
+        this.towerTypes.push(new Tower({
             sprite: g_sprites.towers[2],
             spriteIndex: 2,
             shotVel: 15,
@@ -554,7 +550,7 @@ var menuManager = {
         }));
 
         // Poison turn
-        this._towerTypes.push(new Tower({
+        this.towerTypes.push(new Tower({
             sprite: g_sprites.towers[3],
             spriteIndex: 3,
             shotVel: 15,
@@ -566,7 +562,7 @@ var menuManager = {
         }));
 
         // Slow turn
-        this._towerTypes.push(new Tower({
+        this.towerTypes.push(new Tower({
             sprite: g_sprites.towers[4],
             spriteIndex: 4,
             shotVel: 15,
@@ -578,7 +574,7 @@ var menuManager = {
         }));
 
         // Stun turn
-        this._towerTypes.push(new Tower({
+        this.towerTypes.push(new Tower({
             sprite: g_sprites.towers[5],
             spriteIndex: 5,
             shotVel: 15,
