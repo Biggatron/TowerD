@@ -71,14 +71,16 @@ function processDiagnostics() {
     if (eatKey(KEY_NEXT_WAVE)) entityManager.sendNextWave();
     if (eatKey(KEY_MUTE)) g_soundOn = !g_soundOn;
     if (eatKey(KEY_TOGGLE_NW_INFO)) g_renderNextToggle = !g_renderNextToggle;
-    if (eatKey(KEY_UPGRADE)) menuManager.clickedExistingTower.upgrade();;
-
+    if (eatKey(KEY_UPGRADE)) {
+        if (menuManager.clickedExistingTower == null) return;
+        menuManager.clickedExistingTower.upgrade();
+    }
     // Updates speed of the game, how fast enemies, bullets and towers move
     if (eatKey(KEY_RIGHT_ARROW)) {
-        g_speed += 0.25;
+        if (g_speed < 10.00) g_speed += 0.25;
     }
     if (eatKey(KEY_LEFT_ARROW)) {
-        if (g_speed > 0.25) { g_speed -= 0.25; }
+        if (g_speed > 1.00) g_speed -= 0.25;
     }
 
     for (var i = 1; i <= 6; i++) {
