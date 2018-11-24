@@ -65,6 +65,7 @@ Tower.prototype.update = function(du) {
 
 // Updates the tower stats and sprite, based on upgrade level
 Tower.prototype.upgrade = function() {
+    if (g_money-(this.price*2.5/10)*10 < 0) return;
     this.lvl += 1;
     if (this.lvl == 2) this.spriteIndex += 6;
     if (this.lvl == 4) this.spriteIndex += 6;
